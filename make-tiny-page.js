@@ -12,6 +12,9 @@ const getConfig = (template, entry) => ({
   entry: {
     main: entry,
   },
+  output: {
+    path: path.resolve(__dirname, "dist")
+  },
   resolve: {
     alias: {
       // babel will polyfill corejs as needed, and that needs to resolve

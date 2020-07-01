@@ -23,9 +23,9 @@ const outfile = path.resolve(cwd, options.outfile || "index.html");
 
 makeTinyPage(template, entry, outfile)
   .then(stats => {
-    // TODO - verify this is local dist and not somewhere else :/
+    fs.mkdirSync(path.dirname(outfile), { recursive: true });
     // move built html file to destination
-    fs.copyFileSync("./dist/index.html", outfile);
+    fs.copyFileSync(path.resolve(__dirname, "./dist/index.html"), outfile);
     const { size } = fs.statSync(outfile);
     console.log(`Created a ${prettyBytes(size)} tinypage at ${outfile}`);
   })

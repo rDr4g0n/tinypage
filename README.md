@@ -28,7 +28,7 @@ This will look in `./` for `index.ejs`, `index.js`, and create `index.html`.
 
 Or mix n match as needed
 
-    tinypage ./my-page --outfile dist/my-page.html
+    tinypage --outfile dist/my-page.html ./my-page
 
 TODO
 ----------
