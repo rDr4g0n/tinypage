@@ -7,19 +7,30 @@ Useful when you need a small index.html which does a few things and supports IE1
 - Babel automatically selects corejs polyfills based on what your code contains
 - js (and css which is imported into js) is inlined into a single html file
 
-Keep in mind that more polyfills = more filesize! Maybe don't use `async/await`?
+Things to keep in mind:
+
+- more polyfills = more filesize! Maybe don't use `async/await`?
+- images are inlined; make sure theyre small!
+- be sure to import your css in your `index.js`
 
 Usage
 -----------
 
-You must specify the html template, the javascript entrypoint, and the output html file
+You can specify the html template, the javascript entrypoint, and the output html file
 
     tinypage --template index.ejs --entry index.js --outfile index.html
 
-You can `import` css files in your `index.js` and it will be inlined to the output file. Images referenced in the html and css will also be inlined. Inline all the things!
+If your files are named matching the defaults, you can simply specify the directory to build from
+
+    tinypage .
+
+This will look in `./` for `index.ejs`, `index.js`, and create `index.html`.
+
+Or mix n match as needed
+
+    tinypage ./my-page --outfile dist/my-page.html
 
 TODO
 ----------
 - specify additional polyfills
-- defaults
-- cli docs
+- cli help output
