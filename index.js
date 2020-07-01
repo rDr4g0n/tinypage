@@ -19,7 +19,8 @@ const options = commandLineArgs(optionDefs);
 const cwd = path.resolve(options.dir || process.cwd());
 const template = path.resolve(cwd, options.template ||  "index.ejs");
 const entry = path.resolve(cwd, options.entry || "index.js");
-const outfile = path.resolve(cwd, options.outfile || "index.html");
+// relative to directory that command was called from
+const outfile = path.resolve(process.cwd(), options.outfile || "index.html");
 
 makeTinyPage(template, entry, outfile)
   .then(stats => {
