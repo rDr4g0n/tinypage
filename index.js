@@ -1,16 +1,32 @@
+#!/usr/bin/env node
+
 const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 const webpack = require("webpack");
+const commandLineArgs = require('command-line-args')
 
-// TODO - this comes from user
-const template = "/Users/jmatos/src/csp.composite.ui/src/resend-confirmation/index.ejs";
-const entry = "/Users/jmatos/src/csp.composite.ui/src/resend-confirmation/index.js";
-const outfile = "/Users/jmatos/src/csp.composite.ui/dist/resend-confirmation.html";
+const optionDefs = [
+  { name: "template", type: String, description: "path to html template" },
+  { name: "entry", type: String, description: "path to js entry file" },
+  { name: "outfile", type: String, description: "path to write output html file" },
+];
+// TODO - help output
+const options = commandLineArgs(optionDefs);
 
-const config = {
+// TODO - validate paths
+const cwd = process.cwd();
+const template = path.resolve(cwd, options.template);
+const entry = path.resolve(cwd, options.entry);
+const outfile = path.resolve(cwd, options.outfile);
+
+// applies user settings to a preconfigured webpack config
+const getConfig = (template, entry) => ({
   mode: "production",
+  // ensure webpack operates out of tinypage dir and not whatever
+  // cwd is
+  context: path.resolve(__dirname),
   entry: {
     main: entry,
   },
@@ -18,8 +34,8 @@ const config = {
     alias: {
       // babel will polyfill corejs as needed, and that needs to resolve
       // to this util's local corejs install
-      "core-js": path.resolve(__dirname, "node_modules/core-js")
-    }
+      "core-js": path.resolve(__dirname, "node_modules/core-js"),
+    },
   },
   module: {
     rules: [
@@ -31,8 +47,9 @@ const config = {
         test: /\.js?$/i,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
-          "presets": [[
+        options: {
+          cwd: path.resolve(__dirname),
+          presets: [[
             "@babel/preset-env",
             {
               "targets": {
@@ -70,20 +87,19 @@ const config = {
       inline: "main.js"
     })
   ]
-};
+});
 
-webpack(config, (err, stats) => {
+webpack(getConfig(template, entry), (err, stats) => {
   if(err){
     console.log("Webpack encountered an error", err);
     process.exit(1);
   }
   if(stats.hasErrors()){
-    console.log(stats);
+    console.log(stats.errors);
     console.log("An error occurred during build");
     process.exit(1);
   }
   // TODO - log filesize
-  // console.log(stats);
 
   // move built html file to destination
   fs.copyFileSync("./dist/index.html", outfile);
