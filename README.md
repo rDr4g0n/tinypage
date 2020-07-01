@@ -17,3 +17,9 @@ You must specify the html template, the javascript entrypoint, and the output ht
     tinypage --template index.ejs --entry index.js --outfile index.html
 
 You can `import` css files in your `index.js` and it will be inlined to the output file. Images referenced in the html and css will also be inlined. Inline all the things!
+
+TODO
+----------
+- specify additional polyfills
+- defaults
+- cli docs
